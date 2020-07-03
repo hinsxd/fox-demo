@@ -1,20 +1,7 @@
-import { User } from './User';
+import { Field, Float, ID, ObjectType, registerEnumType } from 'type-graphql';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Student } from './Student';
 import { Teacher } from './Teacher';
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  ManyToOne,
-  AfterUpdate,
-  AfterLoad,
-  BeforeUpdate,
-  getRepository,
-  AfterInsert,
-  BeforeInsert,
-} from 'typeorm';
-import { ObjectType, Field, ID, Float, registerEnumType } from 'type-graphql';
-import { differenceInMinutes, isBefore } from 'date-fns';
-import { IsNotEmpty } from 'class-validator';
 
 export enum LessonStatus {
   Hidden,
@@ -64,57 +51,17 @@ export class Lesson {
   @Field((type) => Float, { nullable: true })
   numberOfPeople?: number;
 
-  @Column('float', { nullable: true, default: null })
-  @Field((type) => Float, { nullable: true })
-  price?: number;
-
-  @Field((type) => User, { nullable: true })
+  @Field((type) => Student, { nullable: true })
   @ManyToOne(
-    (type) => User,
-    (user) => user.bookedLessons,
+    (type) => Student,
+    (student) => student.bookedLessons,
     {
       nullable: true,
       lazy: true,
     }
   )
-  student?: Promise<User>;
+  student?: Promise<Student>;
 
   @Column({ nullable: true })
-  studentId?: string;
-
-  @Field((type) => LessonStatus)
-  @Column({
-    type: 'enum',
-    enum: LessonStatus,
-    default: LessonStatus.Hidden,
-  })
-  @IsNotEmpty()
-  status: LessonStatus;
-
-  @Field()
-  @Column({ default: '' })
-  cancelReason: string;
-
-  // To be removed
-  @Field()
-  @Column({ default: false })
-  bookable: boolean;
-
-  @Field()
-  @Column({ default: false })
-  visible: boolean;
-
-  @Field()
-  @Column({ default: false })
-  cancelled: boolean;
-  @Field()
-  @Column({ default: false })
-  booked: boolean;
-  @Field()
-  @Column({ default: false })
-  locked: boolean;
-  // To be removed
-
-  @Field()
-  inCart: boolean;
+  studentId?: string | null;
 }

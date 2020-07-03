@@ -3,14 +3,6 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
-type CartItem {
-  id: ID!
-  lesson: Lesson!
-  user: User!
-  numberOfPeople: Int!
-  price: Float!
-}
-
 """
 The javascript `Date` as string. Type represents date and time as the ISO Date string.
 """
@@ -23,16 +15,7 @@ type Lesson {
   comment: String!
   teacher: Teacher!
   numberOfPeople: Float
-  price: Float
-  student: User
-  status: LessonStatus!
-  cancelReason: String!
-  bookable: Boolean!
-  visible: Boolean!
-  cancelled: Boolean!
-  booked: Boolean!
-  locked: Boolean!
-  inCart: Boolean!
+  student: Student
 }
 
 """Lesson Status"""
@@ -45,32 +28,38 @@ enum LessonStatus {
 }
 
 type Mutation {
-  setNumberOfPeople(lessonId: ID!, numberOfPeople: Int!): CartItem
   addLesson(teacherId: ID!, start: DateTime!, end: DateTime!, comment: String = "", status: LessonStatus = Hidden, repeatWeeks: Int!): Boolean!
-  editLesson(id: ID!, teacherId: ID!, start: DateTime!, end: DateTime!, comment: String!, cancelReason: String!, status: LessonStatus!): Lesson!
-  addToCart(id: ID!): Boolean!
-  removeFromCart(id: ID!): Boolean!
-  bookLessons(cartItemIds: [String!]!, amount: Int!, source: String!, ccLast4: String!): [Lesson!]!
+  editLesson(id: ID!, studentId: ID, teacherId: ID!, start: DateTime!, end: DateTime!, comment: String!, status: LessonStatus!): Lesson!
   setComment(id: ID!, comment: String!): Lesson!
-  swapLesson(fromId: ID!, toId: ID!, source: String!, ccLast4: String!): Lesson!
   deleteLesson(id: ID!, cancelReason: String): String!
-  setLessonsStatus(from: DateTime!, to: DateTime!, status: LessonStatus!): [Lesson!]!
+  addStudent(name: String!, phone: String = "", emergencyName: String = "", emergencyRelation: String = "", emergencyPhone: String = "", detailedAddress: String = ""): Student!
+  editStudent(id: ID!, name: String, phone: String, emergencyName: String, emergencyRelation: String, emergencyPhone: String, detailedAddress: String): Student!
   addTeacher(name: String!, hourPrice: Int!): Teacher!
   deleteTeacher(id: ID!): Boolean!
   updateTeacher(id: ID!, name: String!, hourPrice: Int!, color: String!): Teacher!
   logout: Boolean!
-  completeProfile(username: String!, password: String!, name: String!, email: String!, phone: String!, emergencyName: String!, emergencyRelation: String!, emergencyPhone: String!, detailedAddress: String): User!
   login(username: String!, password: String!): User!
-  updateProfile(name: String, email: String, phone: String, emergencyName: String, emergencyRelation: String, emergencyPhone: String, region: String, district: String, street: String, detailedAddress: String): User!
 }
 
 type Query {
-  lessons(start: DateTime, end: DateTime): [Lesson!]!
+  lessons: [Lesson!]!
+  students: [Student!]!
+  student(id: ID!): Student!
   teachers: [Teacher!]!
   me: User
   user(id: ID!): User!
   users: [User!]!
-  checkUsernameUsed(username: String!): Boolean!
+}
+
+type Student {
+  id: ID!
+  name: String!
+  phone: String!
+  emergencyName: String!
+  emergencyRelation: String!
+  emergencyPhone: String!
+  detailedAddress: String!
+  bookedLessons: [Lesson!]!
 }
 
 type Teacher {
@@ -82,26 +71,10 @@ type Teacher {
 }
 
 type User {
-  profile: UserProfile
   id: ID!
   email: String!
   role: UserRole!
   username: String
-  bookedLessons(type: String, count: Int): [Lesson!]!
-  cancelledLessons(type: String, count: Int): [Lesson!]!
-  cart: [Lesson!]!
-  cartItems: [CartItem!]!
-}
-
-type UserProfile {
-  id: ID!
-  name: String!
-  phone: String!
-  email: String!
-  emergencyName: String!
-  emergencyRelation: String!
-  emergencyPhone: String!
-  detailedAddress: String!
 }
 
 """User Roles"""

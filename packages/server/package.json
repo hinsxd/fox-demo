@@ -1,7 +1,7 @@
 {
-  "name": "@booking-demo/server",
+  "name": "@fox-demo/server",
   "version": "0.0.1",
-  "description": "Server for booking-demo",
+  "description": "Server for fox-demo",
   "main": "index.ts",
   "author": "hinsxd <hins.xd@hotmail.com>",
   "license": "MIT",

@@ -3,29 +3,29 @@ import {
   Button,
   Container,
   makeStyles,
-  TextField
+  TextField,
 } from '@material-ui/core';
 import { LockOutlined } from '@material-ui/icons';
 import { useAuthContext } from 'context/auth';
 import React, { useState } from 'react';
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main
+    backgroundColor: theme.palette.secondary.main,
   },
 
   formField: {
-    marginTop: theme.spacing(1)
+    marginTop: theme.spacing(1),
   },
   button: {
-    marginTop: theme.spacing(1)
-  }
+    marginTop: theme.spacing(1),
+  },
 }));
 const Login = () => {
   const classes = useStyles();
@@ -36,7 +36,7 @@ const Login = () => {
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     e.persist();
-    setCreds(oldCred => ({ ...oldCred, [name]: e.target.value }));
+    setCreds((oldCred) => ({ ...oldCred, [name]: e.target.value }));
   };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -45,13 +45,13 @@ const Login = () => {
   const loginAsDemoUser = async () => {
     await login({
       username: 'demo-user',
-      password: 'demo-user'
+      password: 'demo-user',
     });
   };
   const loginAsDemoAdmin = async () => {
     await login({
       username: 'demo-admin',
-      password: 'demo-admin'
+      password: 'demo-admin',
     });
   };
   return (
@@ -87,7 +87,7 @@ const Login = () => {
           >
             Sign in
           </Button>
-          <Button
+          {/* <Button
             variant="contained"
             fullWidth
             color="secondary"
@@ -97,7 +97,7 @@ const Login = () => {
             className={classes.button}
           >
             Sign in as Demo User
-          </Button>
+          </Button> */}
           <Button
             variant="contained"
             fullWidth

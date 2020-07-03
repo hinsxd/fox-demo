@@ -1,23 +1,15 @@
-import { isAuthenticated } from '../shared/middleware/isAuthenticated';
 import {
-  Ctx,
-  FieldResolver,
-  Mutation,
-  Query,
-  Resolver,
-  Root,
-  UseMiddleware,
-  Int,
   Args,
   ArgsType,
   Field,
-  ID
+  ID,
+  Int,
+  Mutation,
+  Query,
+  Resolver,
 } from 'type-graphql';
 import { Repository } from 'typeorm';
 import { InjectRepository } from 'typeorm-typedi-extensions';
-import { User } from '../../entity/User';
-import { MyContext } from 'src/types/Context';
-import { Lesson } from './../../entity/Lesson';
 import { Teacher } from './../../entity/Teacher';
 
 @ArgsType()
@@ -25,25 +17,25 @@ class AddTeacherArgs {
   @Field()
   name: string;
 
-  @Field(type => Int)
+  @Field((type) => Int)
   hourPrice: number;
 }
 
 @ArgsType()
 class DeleteTeacherArgs {
-  @Field(type => ID)
+  @Field((type) => ID)
   id: string;
 }
 
 @ArgsType()
 class UpdateTeacherArgs {
-  @Field(type => ID)
+  @Field((type) => ID)
   id: string;
 
   @Field()
   name: string;
 
-  @Field(type => Int)
+  @Field((type) => Int)
   hourPrice: number;
 
   @Field()
@@ -79,11 +71,10 @@ export class TeacherResolver {
   }
 
   @Mutation(() => Teacher)
-  async updateTeacher(@Args()
-  {
-    id,
-    ...updates
-  }: UpdateTeacherArgs): Promise<Teacher> {
+  async updateTeacher(
+    @Args()
+    { id, ...updates }: UpdateTeacherArgs
+  ): Promise<Teacher> {
     try {
       const teacher = await this.teacherRepo.findOneOrFail({ id });
       return this.teacherRepo.save({ ...teacher, ...updates });

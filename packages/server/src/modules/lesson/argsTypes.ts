@@ -1,25 +1,25 @@
-import { ArgsType, Field, ID, Int, Float, InputType } from 'type-graphql';
 import { LessonStatus } from 'src/entity/Lesson';
+import { ArgsType, Field, ID, Int } from 'type-graphql';
 @ArgsType()
 export class AddToCartArgs {
-  @Field(type => ID)
+  @Field((type) => ID)
   id: string;
 }
 @ArgsType()
 export class RemoveFromCartArgs {
-  @Field(type => ID)
+  @Field((type) => ID)
   id: string;
 }
 
 @ArgsType()
 export class AddLessonArgs {
-  @Field(type => ID)
+  @Field((type) => ID)
   teacherId: string;
 
-  @Field(type => Date)
+  @Field((type) => Date)
   start: Date;
 
-  @Field(type => Date)
+  @Field((type) => Date)
   end: Date;
 
   @Field({ defaultValue: '' })
@@ -28,46 +28,46 @@ export class AddLessonArgs {
   // @Field(type => Boolean)
   // bookable: boolean;
 
-  @Field(type => LessonStatus, { defaultValue: LessonStatus.Hidden })
+  @Field((type) => LessonStatus, { defaultValue: LessonStatus.Hidden })
   status: LessonStatus;
 
   // @Field(type => Boolean)
   // visible: boolean;
 
-  @Field(type => Int)
+  @Field((type) => Int)
   repeatWeeks: number;
 }
 
 @ArgsType()
 export class EditLessonArgs {
-  @Field(type => ID)
+  @Field((type) => ID)
   id: string;
 
-  @Field(type => ID)
+  @Field((type) => ID, { nullable: true })
+  studentId: string | null;
+
+  @Field((type) => ID)
   teacherId: string;
 
-  @Field(type => Date)
+  @Field((type) => Date)
   start: Date;
 
-  @Field(type => Date)
+  @Field((type) => Date)
   end: Date;
 
   @Field()
   comment: string;
 
-  @Field()
-  cancelReason: string;
-
-  @Field(type => LessonStatus)
+  @Field((type) => LessonStatus)
   status: LessonStatus;
 }
 
 @ArgsType()
 export class DeleteLessonArgs {
-  @Field(type => ID)
+  @Field((type) => ID)
   id: string;
 
-  @Field(type => String, { nullable: true })
+  @Field((type) => String, { nullable: true })
   cancelReason: string;
 }
 
@@ -76,10 +76,10 @@ export class BookLessonsArgs {
   // @Field(type => [ID])
   // ids: string[];
 
-  @Field(type => [String])
+  @Field((type) => [String])
   cartItemIds: string[];
 
-  @Field(type => Int)
+  @Field((type) => Int)
   amount: number;
 
   @Field()
@@ -91,15 +91,15 @@ export class BookLessonsArgs {
 
 @ArgsType()
 export class LessonsArgs {
-  @Field(type => Date, { nullable: true })
+  @Field((type) => Date, { nullable: true })
   start: Date;
-  @Field(type => Date, { nullable: true })
+  @Field((type) => Date, { nullable: true })
   end: Date;
 }
 
 @ArgsType()
 export class SetCommentArgs {
-  @Field(type => ID)
+  @Field((type) => ID)
   id: string;
 
   @Field()
@@ -107,10 +107,10 @@ export class SetCommentArgs {
 }
 @ArgsType()
 export class SwapLessonArgs {
-  @Field(type => ID)
+  @Field((type) => ID)
   fromId: string;
 
-  @Field(type => ID)
+  @Field((type) => ID)
   toId: string;
 
   @Field()
@@ -122,12 +122,12 @@ export class SwapLessonArgs {
 
 @ArgsType()
 export class SetLessonsStatusArgs {
-  @Field(type => Date)
+  @Field((type) => Date)
   from: Date;
 
-  @Field(type => Date)
+  @Field((type) => Date)
   to: Date;
 
-  @Field(type => LessonStatus)
+  @Field((type) => LessonStatus)
   status: LessonStatus;
 }

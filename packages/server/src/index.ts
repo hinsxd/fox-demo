@@ -1,11 +1,10 @@
-import { config } from 'dotenv-safe';
-const IS_PROD = process.env.NODE_ENV === 'production';
-config({ path: `.env.${process.env.NODE_ENV}` });
-
 import { ApolloServer } from 'apollo-server-express';
+import * as bcrypt from 'bcrypt';
 import * as connectRedis from 'connect-redis';
 import * as cors from 'cors';
-
+import { addDays, addHours, setHours, startOfDay } from 'date-fns';
+import { zonedTimeToUtc } from 'date-fns-tz';
+import { config } from 'dotenv-safe';
 import * as express from 'express';
 import * as session from 'express-session';
 import * as fs from 'fs';
@@ -20,16 +19,15 @@ import { buildSchema } from 'type-graphql';
 import { Container } from 'typedi';
 import * as typeorm from 'typeorm';
 import { authChecker } from './authChecker';
+import { Lesson, LessonStatus } from './entity/Lesson';
+import { Student } from './entity/Student';
+import { Teacher } from './entity/Teacher';
+import { User, UserRole } from './entity/User';
 import { redis } from './redisClient';
 import { stripe } from './stripe';
-import { findOrCreateUser } from './utils/findOrCreateUser';
-import { User, UserRole } from './entity/User';
-import * as bcrypt from 'bcrypt';
-import { Teacher } from './entity/Teacher';
-import { Lesson, LessonStatus } from './entity/Lesson';
-import { addDays, startOfDay, addHours, setHours } from 'date-fns';
-import { zonedTimeToUtc } from 'date-fns-tz';
-import { CartItem } from './entity/CartItem';
+const IS_PROD = process.env.NODE_ENV === 'production';
+config({ path: `.env.${process.env.NODE_ENV}` });
+
 // import { userLoader } from './loaders/userLoader';
 
 declare global {
@@ -72,31 +70,22 @@ async function bootstrap() {
     });
   }
 
-  // Create Demo User
-  let student: User;
+  // Create Demo Student
+  let student: Student;
   try {
     student = await typeorm
-      .getRepository(User)
-      .findOneOrFail({ username: 'demo-user' });
+      .getRepository(Student)
+      .findOneOrFail({ name: 'Demo student' });
   } catch {
-    student = await typeorm.getRepository(User).save({
-      username: 'demo-user',
-      password: bcrypt.hashSync('demo-user', 5),
-      email: 'demo-user@hinsxd.dev',
-      profile: {
-        // fill demo user info
-        name: 'Demo user',
-        email: 'demo-user@hinsxd.dev',
-        phone: '11111111',
-        emergencyName: 'Parent name',
-        emergencyPhone: '22222222',
-      },
-      role: UserRole.User,
+    student = await typeorm.getRepository(Student).save({
+      name: 'Demo user',
+      phone: '11111111',
+      emergencyName: 'Parent name',
+      emergencyPhone: '22222222',
     });
   }
 
   // Clear and generate test data on each restart
-  await typeorm.getRepository(CartItem).delete({});
   await typeorm.getRepository(Lesson).delete({});
   await typeorm.getRepository(Teacher).delete({});
   const teacher = await typeorm.getRepository(Teacher).save({
@@ -200,7 +189,7 @@ async function bootstrap() {
   //         if (!email) {
   //           throw new Error('No email retrieved');
   //         }
-  //         const user = await findOrCreateUser({
+  //         const user = await findOrCreateStudent({
   //           email,
   //           fbProviderId
   //         });
@@ -225,7 +214,7 @@ async function bootstrap() {
   //         if (!email) {
   //           throw new Error('No email retrieved');
   //         }
-  //         const user = await findOrCreateUser({
+  //         const user = await findOrCreateStudent({
   //           email,
   //           googleProviderId
   //         });
@@ -282,15 +271,15 @@ async function bootstrap() {
       .createServer(
         {
           key: fs.readFileSync(
-            '/etc/letsencrypt/live/booking-demo-api.hinsxd.dev/privkey.pem',
+            '/etc/letsencrypt/live/fox-demo-api.hinsxd.dev/privkey.pem',
             'utf8'
           ),
           cert: fs.readFileSync(
-            '/etc/letsencrypt/live/booking-demo-api.hinsxd.dev/cert.pem',
+            '/etc/letsencrypt/live/fox-demo-api.hinsxd.dev/cert.pem',
             'utf8'
           ),
           ca: fs.readFileSync(
-            '/etc/letsencrypt/live/booking-demo-api.hinsxd.dev/chain.pem',
+            '/etc/letsencrypt/live/fox-demo-api.hinsxd.dev/chain.pem',
             'utf8'
           ),
         },

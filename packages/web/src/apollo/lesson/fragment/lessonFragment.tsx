@@ -1,5 +1,5 @@
-import gql from 'graphql-tag';
 import { teacherFragment } from 'apollo/teacher/fragment/teacherFragment';
+import gql from 'graphql-tag';
 
 export const lessonFragment = gql`
   fragment lessonFragment on Lesson {
@@ -10,19 +10,14 @@ export const lessonFragment = gql`
     start
     end
     comment
-    price
-    status
     student {
       id
-      role
-      email
-      profile {
-        id
-        name
-      }
+      name
+      phone
+      emergencyName
+      emergencyRelation
+      emergencyPhone
     }
-    inCart
-    cancelReason
     numberOfPeople
   }
   ${teacherFragment}

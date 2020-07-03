@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: 'booking-demo-server',
+      name: 'fox-demo-server',
       script: './node_modules/.bin/ts-node',
 
       // Options reference: https://pm2.io/doc/en/runtime/reference/ecosystem-file/
@@ -12,11 +12,11 @@ module.exports = {
       watch: false,
       max_memory_restart: '1G',
       env: {
-        NODE_ENV: 'development'
+        NODE_ENV: 'development',
       },
       env_production: {
-        NODE_ENV: 'production'
-      }
-    }
-  ]
+        NODE_ENV: 'production',
+      },
+    },
+  ],
 };
