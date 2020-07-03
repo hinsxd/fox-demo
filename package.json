@@ -1,0 +1,21 @@
+{
+  "name": "root",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "@graphql-codegen/add": "^1.5.0",
+    "@graphql-codegen/cli": "^1.5.0",
+    "@graphql-codegen/typescript": "^1.5.0",
+    "@graphql-codegen/typescript-operations": "^1.5.0",
+    "@graphql-codegen/typescript-react-apollo": "^1.5.0",
+    "concurrently": "^4.1.1"
+  },
+  "scripts": {
+    "start:server": "cd packages/server && yarn start",
+    "start:web": "concurrently \"cd packages/web && yarn start\"  \"yarn codegen --watch\"",
+    "build:web": "yarn workspace @bookme/web run build",
+    "codegen": "graphql-codegen"
+  }
+}
