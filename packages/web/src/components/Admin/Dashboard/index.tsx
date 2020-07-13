@@ -1,23 +1,18 @@
-import React, { useState } from 'react';
-
-// Externals
-import clsx from 'clsx';
-
 // Material helpers
 import {
+  Drawer,
   makeStyles,
+  Toolbar,
   useMediaQuery,
   useTheme,
-  Toolbar
 } from '@material-ui/core';
-
-// Material components
-import { Drawer } from '@material-ui/core';
-
+// Externals
+import clsx from 'clsx';
+import React, { useState } from 'react';
 // Custom components
-import { Sidebar, Topbar, Footer } from './components';
+import { Footer, Sidebar, Topbar } from './components';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   topbar: {
     position: 'fixed',
     width: '100%',
@@ -26,25 +21,25 @@ const useStyles = makeStyles(theme => ({
     right: 'auto',
     transition: theme.transitions.create(['margin', 'width'], {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
-    })
+      duration: theme.transitions.duration.leavingScreen,
+    }),
   },
   topbarShift: {
     marginLeft: '271px',
-    width: 'calc(-271px + 100vw)'
+    width: 'calc(-271px + 100vw)',
   },
   drawerPaper: {
     zIndex: 1200,
-    width: '271px'
+    width: '271px',
   },
   sidebar: {
-    width: '270px'
+    width: '270px',
   },
   wrapper: {
     display: 'flex',
     flexDirection: 'column',
     maxHeight: '100vh',
-    minHeight: '100vh'
+    minHeight: '100vh',
   },
   content: {
     flex: 1,
@@ -52,15 +47,15 @@ const useStyles = makeStyles(theme => ({
     backgroundColor: theme.palette.background.default,
     transition: theme.transitions.create('margin', {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
-    })
+      duration: theme.transitions.duration.leavingScreen,
+    }),
   },
   contentShift: {
-    marginLeft: '270px'
+    marginLeft: '270px',
   },
   footer: {
-    flex: 0
-  }
+    flex: 0,
+  },
 }));
 
 type Props = {
@@ -71,7 +66,7 @@ const Dashboard: React.FC<Props> = ({ title, children }) => {
   const classes = useStyles();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const [isOpen, setIsOpen] = useState(!isMobile);
+  const [isOpen, setIsOpen] = useState(false);
 
   const shiftTopbar = isOpen && !isMobile;
   const shiftContent = isOpen && !isMobile;
@@ -81,13 +76,13 @@ const Dashboard: React.FC<Props> = ({ title, children }) => {
   };
 
   const handleToggleOpen = () => {
-    setIsOpen(prevState => !prevState);
+    setIsOpen((prevState) => !prevState);
   };
   return (
     <>
       <Topbar
         className={clsx(classes.topbar, {
-          [classes.topbarShift]: shiftTopbar
+          [classes.topbarShift]: shiftTopbar,
         })}
         // isSidebarOpen={isOpen}
         onToggleSidebar={handleToggleOpen}
@@ -107,7 +102,7 @@ const Dashboard: React.FC<Props> = ({ title, children }) => {
       <div className={classes.wrapper}>
         <main
           className={clsx(classes.content, {
-            [classes.contentShift]: shiftContent
+            [classes.contentShift]: shiftContent,
           })}
         >
           {children}

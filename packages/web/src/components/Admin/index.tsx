@@ -13,7 +13,6 @@ const Admin = () => (
     <Switch>
       <Route exact path="/admin" component={Overview} />
       <Route path="/admin/teachers" component={Teachers} />
-      {/* <Route path="/admin/addUser" exact component={AddUser} /> */}
       <Route path="/admin/students" exact component={Students} />
       <Route path="/admin/student/:id" component={StudentDetail} />
       <Redirect to="/admin" />

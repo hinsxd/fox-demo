@@ -1,4 +1,4 @@
-import { Field, Float, ID, ObjectType } from 'type-graphql';
+import { Field, ID, ObjectType } from 'type-graphql';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Student } from './Student';
 import { Teacher } from './Teacher';
@@ -34,10 +34,6 @@ export class Lesson {
 
   @Column()
   teacherId: string;
-
-  @Column('int', { nullable: true })
-  @Field((type) => Float, { nullable: true })
-  numberOfPeople?: number;
 
   @Field((type) => Student, { nullable: true })
   @ManyToOne(

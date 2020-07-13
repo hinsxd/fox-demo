@@ -18,7 +18,6 @@ export const lessonFragment = gql`
       emergencyRelation
       emergencyPhone
     }
-    numberOfPeople
   }
   ${teacherFragment}
 `;

@@ -14,7 +14,6 @@ type Lesson {
   end: DateTime!
   comment: String!
   teacher: Teacher!
-  numberOfPeople: Float
   student: Student
 }
 

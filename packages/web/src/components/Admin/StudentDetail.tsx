@@ -13,7 +13,6 @@ import {
 } from '@material-ui/core';
 import { Person, Phone } from '@material-ui/icons';
 import React from 'react';
-import { hot } from 'react-hot-loader/root';
 import { RouteComponentProps } from 'react-router';
 import { useStudentQuery } from 'types/graphql';
 import Dashboard from './Dashboard';
@@ -66,7 +65,7 @@ const UserDetail: React.FC<RouteComponentProps<{ id: string }>> = ({
           <Typography>Error</Typography>
         ) : (
           <Grid container spacing={3}>
-            <Grid item xs={12} sm={3}>
+            <Grid item xs={12} sm={6}>
               <Card>
                 <>
                   <List dense>
@@ -117,4 +116,4 @@ const UserDetail: React.FC<RouteComponentProps<{ id: string }>> = ({
   );
 };
 
-export default hot(UserDetail);
+export default UserDetail;

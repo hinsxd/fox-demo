@@ -23,7 +23,6 @@ export type Lesson = {
   end: Scalars['DateTime'],
   comment: Scalars['String'],
   teacher: Teacher,
-  numberOfPeople?: Maybe<Scalars['Float']>,
   student?: Maybe<Student>,
 };
 
@@ -176,7 +175,7 @@ export enum UserRole {
 
 export type LessonFragmentFragment = (
   { __typename?: 'Lesson' }
-  & Pick<Lesson, 'id' | 'start' | 'end' | 'comment' | 'numberOfPeople'>
+  & Pick<Lesson, 'id' | 'start' | 'end' | 'comment'>
   & { teacher: (
     { __typename?: 'Teacher' }
     & TeacherFragmentFragment
@@ -436,7 +435,6 @@ export const LessonFragmentFragmentDoc = gql`
     emergencyRelation
     emergencyPhone
   }
-  numberOfPeople
 }
     ${TeacherFragmentFragmentDoc}`;
 export const StudentFragmentFragmentDoc = gql`

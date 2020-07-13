@@ -140,22 +140,15 @@ const Overview: React.FC = () => {
                   interactionPlugin,
                 ]}
                 events={lessons.map(
-                  ({
-                    id,
-                    teacher: { name: title },
-                    student,
-                    start,
-                    end,
-                    numberOfPeople,
-                  }) => ({
+                  ({ id, teacher: { name: title }, student, start, end }) => ({
                     id,
                     title: `${title}${
                       student?.name ? ' - ' + student.name : ''
                     }`,
                     start,
                     end,
-                    backgroundColor: 'yellow',
-                    textColor: 'black',
+                    backgroundColor: student ? 'blue' : 'yellow',
+                    textColor: student ? 'white' : 'black',
                   })
                 )}
                 timeZone="local"

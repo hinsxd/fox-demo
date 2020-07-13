@@ -163,20 +163,6 @@ const Sidebar: React.FC<Props> = ({ className }) => {
             primary="Manage Students"
           />
         </ListItem>
-        <ListItem
-          activeClassName={classes.activeListItem}
-          className={classes.listItem}
-          component={NavLinkWithRef}
-          to="/admin/addUser"
-        >
-          <ListItemIcon className={classes.listItemIcon}>
-            <PeopleIcon />
-          </ListItemIcon>
-          <ListItemText
-            classes={{ primary: classes.listItemText }}
-            primary="Add User"
-          />
-        </ListItem>
       </List>
     </nav>
   );

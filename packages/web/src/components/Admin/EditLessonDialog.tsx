@@ -16,9 +16,9 @@ import React, { useContext, useEffect, useState } from 'react';
 import { hot } from 'react-hot-loader/root';
 import { Link as RouterLink } from 'react-router-dom';
 import {
-  TeachersQuery,
   useDeleteLessonMutation,
   useEditLessonMutation,
+  useStudentsQuery,
   useTeachersQuery,
 } from 'types/graphql';
 import ConfirmDeleteDialog from './ConfirmDeleteDialog';
@@ -47,6 +47,7 @@ const useStyles = makeStyles((theme) => ({
 
 type FormState = {
   id: string;
+  studentId: string | null;
   teacherId: string;
   start: Date | null;
   end: Date | null;
@@ -55,6 +56,7 @@ type FormState = {
 
 const initialFormState: FormState = {
   id: '',
+  studentId: null,
   teacherId: '',
   start: null,
   end: null,
@@ -73,10 +75,11 @@ const EditLessonDialog: React.FC<Props> = ({ onClose, refetch }) => {
   const [formState, setFormState] = useState<FormState>(initialFormState);
   useEffect(() => {
     if (lesson) {
-      const { id, start, end, comment, teacher } = lesson;
+      const { id, start, end, comment, teacher, student } = lesson;
       setFormState({
         id,
         start,
+        studentId: student?.id || null,
         end,
         comment,
         teacherId: teacher.id,
@@ -87,8 +90,10 @@ const EditLessonDialog: React.FC<Props> = ({ onClose, refetch }) => {
   }, [lesson]);
 
   const { data: teachersData } = useTeachersQuery();
+  const { data: studentsData } = useStudentsQuery();
 
-  const teachers: TeachersQuery['teachers'] = teachersData?.teachers || [];
+  const teachers = teachersData?.teachers || [];
+  const students = studentsData?.students || [];
 
   const [editLesson, { loading: editing }] = useEditLessonMutation();
   const [deleteLesson, { loading: deleting }] = useDeleteLessonMutation();
@@ -97,7 +102,10 @@ const EditLessonDialog: React.FC<Props> = ({ onClose, refetch }) => {
   const handleEditLesson = async () => {
     if (formState.teacherId !== '' && !!formState.start && !!formState.end) {
       await editLesson({
-        variables: formState,
+        variables: {
+          ...formState,
+          studentId: formState.studentId === '' ? null : formState.studentId,
+        },
       });
       onClose();
       await refetch();
@@ -141,16 +149,10 @@ const EditLessonDialog: React.FC<Props> = ({ onClose, refetch }) => {
                   <Typography component="h6">
                     <Link
                       component={RouterLink}
-                      to={`/admin/user/${lesson?.student?.id}`}
+                      to={`/admin/student/${lesson?.student?.id}`}
                     >
                       {lesson?.student?.name}
                     </Link>
-                  </Typography>
-                </Box>
-                <Box flex={1}>
-                  <Typography variant="overline">Number of students</Typography>
-                  <Typography component="h6">
-                    {lesson?.numberOfPeople || 1}
                   </Typography>
                 </Box>
               </Box>
@@ -177,6 +179,30 @@ const EditLessonDialog: React.FC<Props> = ({ onClose, refetch }) => {
             {teachers.map((teacher) => (
               <option key={teacher.id} value={teacher.id}>
                 {teacher.name}
+              </option>
+            ))}
+          </TextField>
+          <TextField
+            id="studentId"
+            select
+            className={classes.input}
+            fullWidth
+            label="Student"
+            value={formState.studentId === null ? '' : formState.studentId}
+            onChange={(e) =>
+              setFormState((state) => ({
+                ...state,
+                studentId: e.target.value,
+              }))
+            }
+            SelectProps={{
+              native: true,
+            }}
+          >
+            <option value=""></option>
+            {students.map((student) => (
+              <option key={student.id} value={student.id}>
+                {student.name}
               </option>
             ))}
           </TextField>
