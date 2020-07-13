@@ -1,4 +1,3 @@
-import React, { lazy, Suspense } from 'react';
 import DateFnsUtils from '@date-io/date-fns';
 // import DatefnsUtils from '@date-io/date-fns';
 import {
@@ -7,34 +6,19 @@ import {
   MuiThemeProvider,
 } from '@material-ui/core';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import { loadStripe } from '@stripe/stripe-js';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import { ApolloClient } from 'apollo-client';
 import { ApolloLink } from 'apollo-link';
 import { onError } from 'apollo-link-error';
 import { HttpLink } from 'apollo-link-http';
-import {
-  AdminRoute,
-  NewUserRoute,
-  PrivateRoute,
-  PublicRoute,
-} from 'auth/AuthRoutes';
-import CheckoutDialog from 'components/CheckoutDialog';
+import { AdminRoute, PrivateRoute, PublicRoute } from 'auth/AuthRoutes';
 import { AuthProvider } from 'context/auth';
-// import MyLessons from 'components/MyLessons';
-import { CheckoutDialogProvider } from 'context/checkoutDialog';
-import { LessonDialogProvider } from 'context/lessonDialog';
-import { SnackbarProvider } from 'notistack';
+import React, { lazy, Suspense } from 'react';
 import { ApolloProvider } from 'react-apollo';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Cart from 'views/Cart';
-import Home from 'views/Home';
-import Lessons from 'views/Lessons';
 import Login from 'views/Login';
-import NewUser from 'views/NewUser';
-import Settings from 'views/Settings';
 
-import { Elements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY!);
 
 const Admin = lazy(() => import('components/Admin'));
@@ -79,19 +63,20 @@ const App: React.FC<{}> = () => {
       <ApolloProvider client={client}>
         <MuiThemeProvider theme={theme}>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <SnackbarProvider maxSnack={2} autoHideDuration={3000}>
-              <Router>
-                <AuthProvider>
-                  <CheckoutDialogProvider>
-                    <LessonDialogProvider>
-                      <Switch>
-                        <PublicRoute path="/login" exact component={Login} />
-                        <AdminRoute path="/admin">
-                          <Suspense fallback={null}>
-                            <Admin />
-                          </Suspense>
-                        </AdminRoute>
-                        <PrivateRoute exact path="/" component={Home} />
+            {/* <SnackbarProvider maxSnack={2} autoHideDuration={3000}> */}
+            <Router>
+              <AuthProvider>
+                {/* <CheckoutDialogProvider> */}
+                {/* <LessonDialogProvider> */}
+                <Switch>
+                  <PublicRoute path="/login" exact component={Login} />
+                  <AdminRoute path="/admin">
+                    <Suspense fallback={null}>
+                      <Admin />
+                    </Suspense>
+                  </AdminRoute>
+                  <PrivateRoute path="/" />
+                  {/* <PrivateRoute exact path="/" component={Home} />
                         <PrivateRoute exact path="/cart" component={Cart} />
                         <PrivateRoute
                           exact
@@ -103,20 +88,17 @@ const App: React.FC<{}> = () => {
                           exact
                           path="/newUser"
                           component={NewUser}
-                        />
-                        <Route component={() => <div>Not Found</div>} />
-                      </Switch>
-                      <Elements
-                        stripe={stripePromise}
-                        options={{ locale: 'en' }}
-                      >
-                        <CheckoutDialog />
-                      </Elements>
-                    </LessonDialogProvider>
-                  </CheckoutDialogProvider>
-                </AuthProvider>
-              </Router>
-            </SnackbarProvider>
+                        /> */}
+                  <Route component={() => <div>Not Found</div>} />
+                </Switch>
+                {/* <Elements stripe={stripePromise} options={{ locale: 'en' }}>
+                  <CheckoutDialog />
+                </Elements> */}
+                {/* </LessonDialogProvider> */}
+                {/* </CheckoutDialogProvider> */}
+              </AuthProvider>
+            </Router>
+            {/* </SnackbarProvider> */}
           </MuiPickersUtilsProvider>
         </MuiThemeProvider>
       </ApolloProvider>

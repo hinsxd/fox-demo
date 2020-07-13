@@ -1,11 +1,5 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  OneToMany,
-  AfterLoad,
-} from 'typeorm';
-import { ObjectType, Field, ID, Int, Float } from 'type-graphql';
+import { Field, Float, ID, ObjectType } from 'type-graphql';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Lesson } from './Lesson';
 
 @Entity()
@@ -33,8 +27,4 @@ export class Teacher {
   @Field((type) => Float)
   @Column({ type: 'decimal', precision: 10, scale: 0 })
   hourPrice: number;
-
-  @Field()
-  @Column({ default: '#004DCF' })
-  color: string;
 }

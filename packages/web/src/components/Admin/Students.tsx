@@ -1,55 +1,60 @@
 import { makeStyles } from '@material-ui/core/styles';
-import React, { forwardRef } from 'react';
-import { useUsersQuery } from 'types/graphql';
-import Dashboard from './Dashboard';
-import MaterialTable, { Icons } from 'material-table';
 import {
   AddBox,
+  ArrowUpward,
   Check,
+  ChevronLeft,
+  ChevronRight,
   Clear,
   DeleteOutline,
-  ChevronRight,
   Edit,
-  SaveAlt,
   FilterList,
   FirstPage,
   LastPage,
-  ChevronLeft,
-  Search,
-  ArrowUpward,
   Remove,
-  ViewColumn
+  SaveAlt,
+  Search,
+  ViewColumn,
 } from '@material-ui/icons';
+import MaterialTable, { Icons } from 'material-table';
+import React, { forwardRef } from 'react';
 import { useHistory } from 'react-router';
+import {
+  StudentsDocument,
+  useAddStudentMutation,
+  useEditStudentMutation,
+  useStudentsQuery,
+} from 'types/graphql';
+import Dashboard from './Dashboard';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
-    padding: theme.spacing(3)
+    padding: theme.spacing(3),
   },
   paper: {
     // padding: theme.spacing(2),
-    marginTop: theme.spacing(3)
+    marginTop: theme.spacing(3),
   },
   form: {
     marginTop: theme.spacing(3),
     display: 'flex',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
   },
   formControl: {
     margin: theme.spacing(1),
-    minWidth: 200
+    minWidth: 200,
   },
   textField: {
     marginLeft: theme.spacing(1),
     marginRight: theme.spacing(1),
-    width: 200
+    width: 200,
   },
   table: {
     // minWidth: 650
   },
   button: {
-    margin: theme.spacing(1)
-  }
+    margin: theme.spacing(1),
+  },
 }));
 
 const tableIcons: Icons = {
@@ -103,55 +108,55 @@ const tableIcons: Icons = {
   )),
   ViewColumn: forwardRef<SVGSVGElement>((props, ref) => (
     <ViewColumn {...props} ref={ref} />
-  ))
+  )),
 };
 
-const Users: React.FC = () => {
+const Students: React.FC = () => {
   const classes = useStyles();
-  const { data } = useUsersQuery();
-  const users = (data?.users || []).map(
-    ({ id, role, email, profile, username }) => ({
-      id,
-      email,
-      role,
-      username,
-      name: profile?.name || ''
-    })
-  );
+  const { data } = useStudentsQuery();
+  const [addStudent] = useAddStudentMutation({
+    refetchQueries: [{ query: StudentsDocument }],
+  });
+  const [editStudent] = useEditStudentMutation({
+    refetchQueries: [{ query: StudentsDocument }],
+  });
+
+  const students = data?.students || [];
   const history = useHistory();
   return (
-    <Dashboard title="Manage Users">
+    <Dashboard title="Manage Students">
       <div className={classes.root}>
         <MaterialTable
           options={{
             filtering: true,
-            pageSizeOptions: [10, 20, 30]
+            pageSizeOptions: [10, 20, 30],
           }}
           icons={tableIcons}
+          editable={{
+            onRowAdd: async (rowData) => {
+              await addStudent({ variables: rowData });
+            },
+            onRowUpdate: async (newData, oldData) => {
+              await editStudent({ variables: newData });
+            },
+            onRowDelete: async (rowData) => {},
+          }}
           onRowClick={(event, rowData) => {
-            if (rowData) history.push(`/admin/user/${rowData.id}`);
+            if (rowData) history.push(`/admin/student/${rowData.id}`);
           }}
           columns={[
-            { title: 'Username', field: 'username' },
             { title: 'Name', field: 'name' },
-            { title: 'Email', field: 'email' },
-            {
-              title: 'User Type',
-              field: 'role',
-              type: 'string' as any,
-              filtering: true,
-              lookup: {
-                Admin: 'Admin',
-                User: 'Student',
-                'New User': 'New User'
-              }
-            }
+            { title: 'Phone', field: 'phone' },
+            { title: 'Emergency contact', field: 'emergencyName' },
+            { title: 'Emergency Phone', field: 'emergencyPhone' },
+            { title: 'Relation', field: 'emergencyRelation' },
+            { title: 'Address', field: 'detailedAddress' },
           ]}
-          data={users}
-          title="Users"
+          data={students}
+          title="Students"
         />
       </div>
     </Dashboard>
   );
 };
-export default Users;
+export default Students;

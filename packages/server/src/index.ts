@@ -19,7 +19,7 @@ import { buildSchema } from 'type-graphql';
 import { Container } from 'typedi';
 import * as typeorm from 'typeorm';
 import { authChecker } from './authChecker';
-import { Lesson, LessonStatus } from './entity/Lesson';
+import { Lesson } from './entity/Lesson';
 import { Student } from './entity/Student';
 import { Teacher } from './entity/Teacher';
 import { User, UserRole } from './entity/User';
@@ -109,7 +109,6 @@ async function bootstrap() {
           teacherId: teacher.id,
           start: addDays(addHours(start, i * 2), day),
           end: addDays(addHours(start, (i + 1) * 2), day),
-          status: booked ? LessonStatus.Booked : LessonStatus.Bookable,
           studentId: booked ? student.id : undefined,
           comment: '',
         };

@@ -9,7 +9,6 @@ export const EDIT_LESSON_MUTATION = gql`
     $start: DateTime!
     $end: DateTime!
     $comment: String!
-    $status: LessonStatus!
   ) {
     editLesson(
       id: $id
@@ -18,7 +17,6 @@ export const EDIT_LESSON_MUTATION = gql`
       start: $start
       end: $end
       comment: $comment
-      status: $status
     ) {
       ...lessonFragment
     }

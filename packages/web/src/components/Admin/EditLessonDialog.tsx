@@ -1,49 +1,48 @@
 import {
-  makeStyles,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  Button,
-  TextField,
-  DialogActions,
   Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Link,
+  makeStyles,
+  TextField,
   Typography,
-  Link
 } from '@material-ui/core';
-import React, { useState, useEffect, useContext } from 'react';
-import {
-  useTeachersQuery,
-  TeachersQuery,
-  useEditLessonMutation,
-  useDeleteLessonMutation,
-  LessonStatus
-} from 'types/graphql';
 import { KeyboardDateTimePicker } from '@material-ui/pickers';
-import { DialogContext } from './Overview';
-import ConfirmDeleteDialog from './ConfirmDeleteDialog';
 import clsx from 'clsx';
+import React, { useContext, useEffect, useState } from 'react';
 import { hot } from 'react-hot-loader/root';
 import { Link as RouterLink } from 'react-router-dom';
+import {
+  TeachersQuery,
+  useDeleteLessonMutation,
+  useEditLessonMutation,
+  useTeachersQuery,
+} from 'types/graphql';
+import ConfirmDeleteDialog from './ConfirmDeleteDialog';
+import { DialogContext } from './Overview';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
-    padding: theme.spacing(3)
+    padding: theme.spacing(3),
   },
   deleteButton: {
     color: '#fff',
     backgroundColor: theme.palette.danger.main,
     '&:hover': {
-      backgroundColor: theme.palette.danger.dark
-    }
+      backgroundColor: theme.palette.danger.dark,
+    },
   },
   input: {
     marginBottom: theme.spacing(1.5),
     // width: '100%',
-    minWidth: 120
+    minWidth: 120,
   },
   inputRowElement: {
-    flex: 1
-  }
+    flex: 1,
+  },
 }));
 
 type FormState = {
@@ -52,8 +51,6 @@ type FormState = {
   start: Date | null;
   end: Date | null;
   comment: string;
-  status: LessonStatus;
-  cancelReason: string;
 };
 
 const initialFormState: FormState = {
@@ -62,8 +59,6 @@ const initialFormState: FormState = {
   start: null,
   end: null,
   comment: '',
-  cancelReason: '',
-  status: LessonStatus.Hidden
 };
 
 type Props = {
@@ -78,15 +73,13 @@ const EditLessonDialog: React.FC<Props> = ({ onClose, refetch }) => {
   const [formState, setFormState] = useState<FormState>(initialFormState);
   useEffect(() => {
     if (lesson) {
-      const { id, start, end, comment, cancelReason, teacher, status } = lesson;
+      const { id, start, end, comment, teacher } = lesson;
       setFormState({
         id,
         start,
         end,
         comment,
-        status,
-        cancelReason,
-        teacherId: teacher.id
+        teacherId: teacher.id,
       });
     } else {
       setFormState(initialFormState);
@@ -100,13 +93,11 @@ const EditLessonDialog: React.FC<Props> = ({ onClose, refetch }) => {
   const [editLesson, { loading: editing }] = useEditLessonMutation();
   const [deleteLesson, { loading: deleting }] = useDeleteLessonMutation();
   const loading = editing || deleting;
-  const alreadyBooked =
-    lesson?.status === LessonStatus.Booked ||
-    lesson?.status === LessonStatus.Cancelled;
+
   const handleEditLesson = async () => {
     if (formState.teacherId !== '' && !!formState.start && !!formState.end) {
       await editLesson({
-        variables: formState
+        variables: formState,
       });
       onClose();
       await refetch();
@@ -115,15 +106,11 @@ const EditLessonDialog: React.FC<Props> = ({ onClose, refetch }) => {
 
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const handleDeleteButtonClick = async () => {
-    if (lesson?.status === LessonStatus.Booked) {
-      setConfirmDialogOpen(true);
-    } else if (lesson?.status !== LessonStatus.Cancelled) {
-      await deleteLesson({
-        variables: { id: formState.id }
-      });
-      await refetch();
-      onClose();
-    }
+    await deleteLesson({
+      variables: { id: formState.id },
+    });
+    await refetch();
+    onClose();
   };
 
   const confirmDelete = async (confirm: boolean, cancelReason?: string) => {
@@ -146,7 +133,7 @@ const EditLessonDialog: React.FC<Props> = ({ onClose, refetch }) => {
         <DialogTitle>Edit lesson</DialogTitle>
 
         <DialogContent>
-          {alreadyBooked && lesson?.student && (
+          {lesson?.student && (
             <Box>
               <Box pb={1} display="flex" flexDirection="row">
                 <Box flex={1}>
@@ -156,7 +143,7 @@ const EditLessonDialog: React.FC<Props> = ({ onClose, refetch }) => {
                       component={RouterLink}
                       to={`/admin/user/${lesson?.student?.id}`}
                     >
-                      {lesson?.student?.profile?.name}
+                      {lesson?.student?.name}
                     </Link>
                   </Typography>
                 </Box>
@@ -173,22 +160,21 @@ const EditLessonDialog: React.FC<Props> = ({ onClose, refetch }) => {
             id="teacherId"
             select
             className={classes.input}
-            disabled={alreadyBooked}
             fullWidth
             label="Teacher"
             value={formState.teacherId}
-            onChange={e =>
-              setFormState(state => ({
+            onChange={(e) =>
+              setFormState((state) => ({
                 ...state,
-                teacherId: e.target.value
+                teacherId: e.target.value,
               }))
             }
             SelectProps={{
-              native: true
+              native: true,
             }}
           >
             <option value=""></option>
-            {teachers.map(teacher => (
+            {teachers.map((teacher) => (
               <option key={teacher.id} value={teacher.id}>
                 {teacher.name}
               </option>
@@ -196,18 +182,17 @@ const EditLessonDialog: React.FC<Props> = ({ onClose, refetch }) => {
           </TextField>
           <Box display="flex" flexDirection="row">
             <KeyboardDateTimePicker
-              disabled={alreadyBooked}
               className={clsx(classes.input, classes.inputRowElement)}
               value={formState.start}
               minutesStep={15}
               autoOk={true}
               openTo="hours"
               format="dd/MM/yyyy HH:mm"
-              onChange={date => {
+              onChange={(date) => {
                 if (date) {
-                  setFormState(state => ({
+                  setFormState((state) => ({
                     ...state,
-                    start: date
+                    start: date,
                   }));
                 }
               }}
@@ -215,18 +200,17 @@ const EditLessonDialog: React.FC<Props> = ({ onClose, refetch }) => {
               label="Starting Time"
             />
             <KeyboardDateTimePicker
-              disabled={alreadyBooked}
               className={clsx(classes.input, classes.inputRowElement)}
               value={formState.end}
               minutesStep={15}
               autoOk={true}
               openTo="hours"
               format="dd/MM/yyyy HH:mm"
-              onChange={date => {
+              onChange={(date) => {
                 if (date)
-                  setFormState(state => ({
+                  setFormState((state) => ({
                     ...state,
-                    end: date
+                    end: date,
                   }));
               }}
               ampm={false}
@@ -238,84 +222,26 @@ const EditLessonDialog: React.FC<Props> = ({ onClose, refetch }) => {
             label="Comments"
             placeholder="Add comments"
             value={formState.comment}
-            onChange={e => {
+            onChange={(e) => {
               e.persist();
-              setFormState(state => ({
+              setFormState((state) => ({
                 ...state,
-                comment: e.target.value
+                comment: e.target.value,
               }));
             }}
             fullWidth
           />{' '}
-          {lesson?.status === LessonStatus.Cancelled && (
-            <TextField
-              className={classes.input}
-              label="Cancel Reason"
-              placeholder=""
-              disabled
-              value={formState.cancelReason}
-              onChange={e => {
-                e.persist();
-                setFormState(state => ({
-                  ...state,
-                  cancelReason: e.target.value
-                }));
-              }}
-              fullWidth
-            />
-          )}
-          <TextField
-            className={classes.input}
-            id="status"
-            select
-            label="Lesson Status"
-            value={formState.status}
-            disabled={alreadyBooked}
-            onChange={e => {
-              e.persist();
-              setFormState(state => ({
-                ...state,
-                status: e.target.value as LessonStatus
-              }));
-            }}
-            SelectProps={{
-              native: true,
-              MenuProps: {
-                // className: classes.menu,
-              }
-            }}
-            margin="normal"
-            fullWidth
-          >
-            <option value=""></option>
-            {Object.keys(LessonStatus).map(status => (
-              <option
-                key={status}
-                value={status}
-                disabled={
-                  status === LessonStatus.Booked ||
-                  status === LessonStatus.Cancelled
-                }
-              >
-                {status}
-              </option>
-            ))}
-          </TextField>
         </DialogContent>
         <DialogActions>
-          {lesson?.status !== LessonStatus.Cancelled && (
-            <Button
-              className={classes.deleteButton}
-              disabled={loading}
-              onClick={handleDeleteButtonClick}
-              // fullWidth
-              variant="contained"
-            >
-              {lesson?.status === LessonStatus.Booked
-                ? 'Cancel Lesson'
-                : 'Delete Lesson'}
-            </Button>
-          )}
+          <Button
+            className={classes.deleteButton}
+            disabled={loading}
+            onClick={handleDeleteButtonClick}
+            // fullWidth
+            variant="contained"
+          >
+            Delete Lesson
+          </Button>
           <Button
             // className={classes.input}
             onClick={handleEditLesson}

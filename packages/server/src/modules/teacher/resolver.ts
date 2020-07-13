@@ -28,7 +28,7 @@ class DeleteTeacherArgs {
 }
 
 @ArgsType()
-class UpdateTeacherArgs {
+class EditTeacherArgs {
   @Field((type) => ID)
   id: string;
 
@@ -37,9 +37,6 @@ class UpdateTeacherArgs {
 
   @Field((type) => Int)
   hourPrice: number;
-
-  @Field()
-  color: string;
 }
 @Resolver(Teacher)
 export class TeacherResolver {
@@ -71,9 +68,9 @@ export class TeacherResolver {
   }
 
   @Mutation(() => Teacher)
-  async updateTeacher(
+  async editTeacher(
     @Args()
-    { id, ...updates }: UpdateTeacherArgs
+    { id, ...updates }: EditTeacherArgs
   ): Promise<Teacher> {
     try {
       const teacher = await this.teacherRepo.findOneOrFail({ id });

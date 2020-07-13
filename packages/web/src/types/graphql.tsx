@@ -27,15 +27,6 @@ export type Lesson = {
   student?: Maybe<Student>,
 };
 
-/** Lesson Status */
-export enum LessonStatus {
-  Hidden = 'Hidden',
-  DisplayOnly = 'DisplayOnly',
-  Bookable = 'Bookable',
-  Booked = 'Booked',
-  Cancelled = 'Cancelled'
-}
-
 export type Mutation = {
    __typename?: 'Mutation',
   addLesson: Scalars['Boolean'],
@@ -46,7 +37,7 @@ export type Mutation = {
   editStudent: Student,
   addTeacher: Teacher,
   deleteTeacher: Scalars['Boolean'],
-  updateTeacher: Teacher,
+  editTeacher: Teacher,
   logout: Scalars['Boolean'],
   login: User,
 };
@@ -57,7 +48,6 @@ export type MutationAddLessonArgs = {
   start: Scalars['DateTime'],
   end: Scalars['DateTime'],
   comment?: Maybe<Scalars['String']>,
-  status?: Maybe<LessonStatus>,
   repeatWeeks: Scalars['Int']
 };
 
@@ -68,8 +58,7 @@ export type MutationEditLessonArgs = {
   teacherId: Scalars['ID'],
   start: Scalars['DateTime'],
   end: Scalars['DateTime'],
-  comment: Scalars['String'],
-  status: LessonStatus
+  comment: Scalars['String']
 };
 
 
@@ -117,11 +106,10 @@ export type MutationDeleteTeacherArgs = {
 };
 
 
-export type MutationUpdateTeacherArgs = {
+export type MutationEditTeacherArgs = {
   id: Scalars['ID'],
   name: Scalars['String'],
-  hourPrice: Scalars['Int'],
-  color: Scalars['String']
+  hourPrice: Scalars['Int']
 };
 
 
@@ -169,7 +157,6 @@ export type Teacher = {
   name: Scalars['String'],
   lessons?: Maybe<Array<Lesson>>,
   hourPrice: Scalars['Float'],
-  color: Scalars['String'],
 };
 
 export type User = {
@@ -203,8 +190,7 @@ export type AddLessonMutationVariables = {
   teacherId: Scalars['ID'],
   start: Scalars['DateTime'],
   end: Scalars['DateTime'],
-  repeatWeeks: Scalars['Int'],
-  status: LessonStatus
+  repeatWeeks: Scalars['Int']
 };
 
 
@@ -230,8 +216,7 @@ export type EditLessonMutationVariables = {
   teacherId: Scalars['ID'],
   start: Scalars['DateTime'],
   end: Scalars['DateTime'],
-  comment: Scalars['String'],
-  status: LessonStatus
+  comment: Scalars['String']
 };
 
 
@@ -268,65 +253,46 @@ export type LessonsQuery = (
   )> }
 );
 
-export type TeacherFragmentFragment = (
-  { __typename?: 'Teacher' }
-  & Pick<Teacher, 'id' | 'name' | 'hourPrice' | 'color'>
+export type StudentFragmentFragment = (
+  { __typename?: 'Student' }
+  & Pick<Student, 'id' | 'name' | 'phone' | 'emergencyName' | 'emergencyRelation' | 'emergencyPhone'>
 );
 
-export type AddTeacherMutationVariables = {
+export type AddStudentMutationVariables = {
   name: Scalars['String'],
-  hourPrice: Scalars['Int']
+  phone?: Maybe<Scalars['String']>,
+  emergencyName?: Maybe<Scalars['String']>,
+  emergencyRelation?: Maybe<Scalars['String']>,
+  emergencyPhone?: Maybe<Scalars['String']>,
+  detailedAddress?: Maybe<Scalars['String']>
 };
 
 
-export type AddTeacherMutation = (
+export type AddStudentMutation = (
   { __typename?: 'Mutation' }
-  & { addTeacher: (
-    { __typename?: 'Teacher' }
-    & TeacherFragmentFragment
+  & { addStudent: (
+    { __typename?: 'Student' }
+    & StudentFragmentFragment
   ) }
 );
 
-export type DeleteTeacherMutationVariables = {
-  id: Scalars['ID']
-};
-
-
-export type DeleteTeacherMutation = (
-  { __typename?: 'Mutation' }
-  & Pick<Mutation, 'deleteTeacher'>
-);
-
-export type UpdateTeacherMutationVariables = {
+export type EditStudentMutationVariables = {
   id: Scalars['ID'],
-  name: Scalars['String'],
-  hourPrice: Scalars['Int'],
-  color: Scalars['String']
+  name?: Maybe<Scalars['String']>,
+  phone?: Maybe<Scalars['String']>,
+  emergencyName?: Maybe<Scalars['String']>,
+  emergencyRelation?: Maybe<Scalars['String']>,
+  emergencyPhone?: Maybe<Scalars['String']>,
+  detailedAddress?: Maybe<Scalars['String']>
 };
 
 
-export type UpdateTeacherMutation = (
+export type EditStudentMutation = (
   { __typename?: 'Mutation' }
-  & { updateTeacher: (
-    { __typename?: 'Teacher' }
-    & TeacherFragmentFragment
+  & { editStudent: (
+    { __typename?: 'Student' }
+    & StudentFragmentFragment
   ) }
-);
-
-export type TeachersQueryVariables = {};
-
-
-export type TeachersQuery = (
-  { __typename?: 'Query' }
-  & { teachers: Array<(
-    { __typename?: 'Teacher' }
-    & TeacherFragmentFragment
-  )> }
-);
-
-export type UserFragmentFragment = (
-  { __typename?: 'User' }
-  & Pick<User, 'id' | 'role' | 'email' | 'username'>
 );
 
 export type LoginMutationVariables = {
@@ -362,28 +328,88 @@ export type MeQuery = (
   )> }
 );
 
-export type UserQueryVariables = {
+export type StudentQueryVariables = {
   id: Scalars['ID']
 };
 
 
-export type UserQuery = (
+export type StudentQuery = (
   { __typename?: 'Query' }
-  & { user: (
-    { __typename?: 'User' }
-    & UserFragmentFragment
+  & { student: (
+    { __typename?: 'Student' }
+    & StudentFragmentFragment
   ) }
 );
 
-export type UsersQueryVariables = {};
+export type StudentsQueryVariables = {};
 
 
-export type UsersQuery = (
+export type StudentsQuery = (
   { __typename?: 'Query' }
-  & { users: Array<(
-    { __typename?: 'User' }
-    & UserFragmentFragment
+  & { students: Array<(
+    { __typename?: 'Student' }
+    & StudentFragmentFragment
   )> }
+);
+
+export type TeacherFragmentFragment = (
+  { __typename?: 'Teacher' }
+  & Pick<Teacher, 'id' | 'name' | 'hourPrice'>
+);
+
+export type AddTeacherMutationVariables = {
+  name: Scalars['String'],
+  hourPrice: Scalars['Int']
+};
+
+
+export type AddTeacherMutation = (
+  { __typename?: 'Mutation' }
+  & { addTeacher: (
+    { __typename?: 'Teacher' }
+    & TeacherFragmentFragment
+  ) }
+);
+
+export type DeleteTeacherMutationVariables = {
+  id: Scalars['ID']
+};
+
+
+export type DeleteTeacherMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'deleteTeacher'>
+);
+
+export type EditTeacherMutationVariables = {
+  id: Scalars['ID'],
+  name: Scalars['String'],
+  hourPrice: Scalars['Int']
+};
+
+
+export type EditTeacherMutation = (
+  { __typename?: 'Mutation' }
+  & { editTeacher: (
+    { __typename?: 'Teacher' }
+    & TeacherFragmentFragment
+  ) }
+);
+
+export type TeachersQueryVariables = {};
+
+
+export type TeachersQuery = (
+  { __typename?: 'Query' }
+  & { teachers: Array<(
+    { __typename?: 'Teacher' }
+    & TeacherFragmentFragment
+  )> }
+);
+
+export type UserFragmentFragment = (
+  { __typename?: 'User' }
+  & Pick<User, 'id' | 'role' | 'email' | 'username'>
 );
 
 export const TeacherFragmentFragmentDoc = gql`
@@ -391,7 +417,6 @@ export const TeacherFragmentFragmentDoc = gql`
   id
   name
   hourPrice
-  color
 }
     `;
 export const LessonFragmentFragmentDoc = gql`
@@ -414,6 +439,16 @@ export const LessonFragmentFragmentDoc = gql`
   numberOfPeople
 }
     ${TeacherFragmentFragmentDoc}`;
+export const StudentFragmentFragmentDoc = gql`
+    fragment studentFragment on Student {
+  id
+  name
+  phone
+  emergencyName
+  emergencyRelation
+  emergencyPhone
+}
+    `;
 export const UserFragmentFragmentDoc = gql`
     fragment userFragment on User {
   id
@@ -423,8 +458,8 @@ export const UserFragmentFragmentDoc = gql`
 }
     `;
 export const AddLessonDocument = gql`
-    mutation AddLesson($teacherId: ID!, $start: DateTime!, $end: DateTime!, $repeatWeeks: Int!, $status: LessonStatus!) {
-  addLesson(teacherId: $teacherId, start: $start, end: $end, repeatWeeks: $repeatWeeks, status: $status)
+    mutation AddLesson($teacherId: ID!, $start: DateTime!, $end: DateTime!, $repeatWeeks: Int!) {
+  addLesson(teacherId: $teacherId, start: $start, end: $end, repeatWeeks: $repeatWeeks)
 }
     `;
 export type AddLessonMutationFn = ApolloReactCommon.MutationFunction<AddLessonMutation, AddLessonMutationVariables>;
@@ -446,7 +481,6 @@ export type AddLessonMutationFn = ApolloReactCommon.MutationFunction<AddLessonMu
  *      start: // value for 'start'
  *      end: // value for 'end'
  *      repeatWeeks: // value for 'repeatWeeks'
- *      status: // value for 'status'
  *   },
  * });
  */
@@ -488,8 +522,8 @@ export type DeleteLessonMutationHookResult = ReturnType<typeof useDeleteLessonMu
 export type DeleteLessonMutationResult = ApolloReactCommon.MutationResult<DeleteLessonMutation>;
 export type DeleteLessonMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteLessonMutation, DeleteLessonMutationVariables>;
 export const EditLessonDocument = gql`
-    mutation EditLesson($id: ID!, $studentId: ID, $teacherId: ID!, $start: DateTime!, $end: DateTime!, $comment: String!, $status: LessonStatus!) {
-  editLesson(id: $id, studentId: $studentId, teacherId: $teacherId, start: $start, end: $end, comment: $comment, status: $status) {
+    mutation EditLesson($id: ID!, $studentId: ID, $teacherId: ID!, $start: DateTime!, $end: DateTime!, $comment: String!) {
+  editLesson(id: $id, studentId: $studentId, teacherId: $teacherId, start: $start, end: $end, comment: $comment) {
     ...lessonFragment
   }
 }
@@ -515,7 +549,6 @@ export type EditLessonMutationFn = ApolloReactCommon.MutationFunction<EditLesson
  *      start: // value for 'start'
  *      end: // value for 'end'
  *      comment: // value for 'comment'
- *      status: // value for 'status'
  *   },
  * });
  */
@@ -590,136 +623,81 @@ export function useLessonsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHook
 export type LessonsQueryHookResult = ReturnType<typeof useLessonsQuery>;
 export type LessonsLazyQueryHookResult = ReturnType<typeof useLessonsLazyQuery>;
 export type LessonsQueryResult = ApolloReactCommon.QueryResult<LessonsQuery, LessonsQueryVariables>;
-export const AddTeacherDocument = gql`
-    mutation AddTeacher($name: String!, $hourPrice: Int!) {
-  addTeacher(name: $name, hourPrice: $hourPrice) {
-    ...teacherFragment
+export const AddStudentDocument = gql`
+    mutation AddStudent($name: String!, $phone: String, $emergencyName: String, $emergencyRelation: String, $emergencyPhone: String, $detailedAddress: String) {
+  addStudent(name: $name, phone: $phone, emergencyName: $emergencyName, emergencyRelation: $emergencyRelation, emergencyPhone: $emergencyPhone, detailedAddress: $detailedAddress) {
+    ...studentFragment
   }
 }
-    ${TeacherFragmentFragmentDoc}`;
-export type AddTeacherMutationFn = ApolloReactCommon.MutationFunction<AddTeacherMutation, AddTeacherMutationVariables>;
+    ${StudentFragmentFragmentDoc}`;
+export type AddStudentMutationFn = ApolloReactCommon.MutationFunction<AddStudentMutation, AddStudentMutationVariables>;
 
 /**
- * __useAddTeacherMutation__
+ * __useAddStudentMutation__
  *
- * To run a mutation, you first call `useAddTeacherMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useAddTeacherMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useAddStudentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddStudentMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [addTeacherMutation, { data, loading, error }] = useAddTeacherMutation({
+ * const [addStudentMutation, { data, loading, error }] = useAddStudentMutation({
  *   variables: {
  *      name: // value for 'name'
- *      hourPrice: // value for 'hourPrice'
+ *      phone: // value for 'phone'
+ *      emergencyName: // value for 'emergencyName'
+ *      emergencyRelation: // value for 'emergencyRelation'
+ *      emergencyPhone: // value for 'emergencyPhone'
+ *      detailedAddress: // value for 'detailedAddress'
  *   },
  * });
  */
-export function useAddTeacherMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<AddTeacherMutation, AddTeacherMutationVariables>) {
-        return ApolloReactHooks.useMutation<AddTeacherMutation, AddTeacherMutationVariables>(AddTeacherDocument, baseOptions);
+export function useAddStudentMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<AddStudentMutation, AddStudentMutationVariables>) {
+        return ApolloReactHooks.useMutation<AddStudentMutation, AddStudentMutationVariables>(AddStudentDocument, baseOptions);
       }
-export type AddTeacherMutationHookResult = ReturnType<typeof useAddTeacherMutation>;
-export type AddTeacherMutationResult = ApolloReactCommon.MutationResult<AddTeacherMutation>;
-export type AddTeacherMutationOptions = ApolloReactCommon.BaseMutationOptions<AddTeacherMutation, AddTeacherMutationVariables>;
-export const DeleteTeacherDocument = gql`
-    mutation DeleteTeacher($id: ID!) {
-  deleteTeacher(id: $id)
-}
-    `;
-export type DeleteTeacherMutationFn = ApolloReactCommon.MutationFunction<DeleteTeacherMutation, DeleteTeacherMutationVariables>;
-
-/**
- * __useDeleteTeacherMutation__
- *
- * To run a mutation, you first call `useDeleteTeacherMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeleteTeacherMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [deleteTeacherMutation, { data, loading, error }] = useDeleteTeacherMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useDeleteTeacherMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteTeacherMutation, DeleteTeacherMutationVariables>) {
-        return ApolloReactHooks.useMutation<DeleteTeacherMutation, DeleteTeacherMutationVariables>(DeleteTeacherDocument, baseOptions);
-      }
-export type DeleteTeacherMutationHookResult = ReturnType<typeof useDeleteTeacherMutation>;
-export type DeleteTeacherMutationResult = ApolloReactCommon.MutationResult<DeleteTeacherMutation>;
-export type DeleteTeacherMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteTeacherMutation, DeleteTeacherMutationVariables>;
-export const UpdateTeacherDocument = gql`
-    mutation UpdateTeacher($id: ID!, $name: String!, $hourPrice: Int!, $color: String!) {
-  updateTeacher(id: $id, name: $name, hourPrice: $hourPrice, color: $color) {
-    ...teacherFragment
+export type AddStudentMutationHookResult = ReturnType<typeof useAddStudentMutation>;
+export type AddStudentMutationResult = ApolloReactCommon.MutationResult<AddStudentMutation>;
+export type AddStudentMutationOptions = ApolloReactCommon.BaseMutationOptions<AddStudentMutation, AddStudentMutationVariables>;
+export const EditStudentDocument = gql`
+    mutation EditStudent($id: ID!, $name: String, $phone: String, $emergencyName: String, $emergencyRelation: String, $emergencyPhone: String, $detailedAddress: String) {
+  editStudent(id: $id, name: $name, phone: $phone, emergencyName: $emergencyName, emergencyRelation: $emergencyRelation, emergencyPhone: $emergencyPhone, detailedAddress: $detailedAddress) {
+    ...studentFragment
   }
 }
-    ${TeacherFragmentFragmentDoc}`;
-export type UpdateTeacherMutationFn = ApolloReactCommon.MutationFunction<UpdateTeacherMutation, UpdateTeacherMutationVariables>;
+    ${StudentFragmentFragmentDoc}`;
+export type EditStudentMutationFn = ApolloReactCommon.MutationFunction<EditStudentMutation, EditStudentMutationVariables>;
 
 /**
- * __useUpdateTeacherMutation__
+ * __useEditStudentMutation__
  *
- * To run a mutation, you first call `useUpdateTeacherMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateTeacherMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useEditStudentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEditStudentMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [updateTeacherMutation, { data, loading, error }] = useUpdateTeacherMutation({
+ * const [editStudentMutation, { data, loading, error }] = useEditStudentMutation({
  *   variables: {
  *      id: // value for 'id'
  *      name: // value for 'name'
- *      hourPrice: // value for 'hourPrice'
- *      color: // value for 'color'
+ *      phone: // value for 'phone'
+ *      emergencyName: // value for 'emergencyName'
+ *      emergencyRelation: // value for 'emergencyRelation'
+ *      emergencyPhone: // value for 'emergencyPhone'
+ *      detailedAddress: // value for 'detailedAddress'
  *   },
  * });
  */
-export function useUpdateTeacherMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateTeacherMutation, UpdateTeacherMutationVariables>) {
-        return ApolloReactHooks.useMutation<UpdateTeacherMutation, UpdateTeacherMutationVariables>(UpdateTeacherDocument, baseOptions);
+export function useEditStudentMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<EditStudentMutation, EditStudentMutationVariables>) {
+        return ApolloReactHooks.useMutation<EditStudentMutation, EditStudentMutationVariables>(EditStudentDocument, baseOptions);
       }
-export type UpdateTeacherMutationHookResult = ReturnType<typeof useUpdateTeacherMutation>;
-export type UpdateTeacherMutationResult = ApolloReactCommon.MutationResult<UpdateTeacherMutation>;
-export type UpdateTeacherMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateTeacherMutation, UpdateTeacherMutationVariables>;
-export const TeachersDocument = gql`
-    query Teachers {
-  teachers {
-    ...teacherFragment
-  }
-}
-    ${TeacherFragmentFragmentDoc}`;
-
-/**
- * __useTeachersQuery__
- *
- * To run a query within a React component, call `useTeachersQuery` and pass it any options that fit your needs.
- * When your component renders, `useTeachersQuery` returns an object from Apollo Client that contains loading, error, and data properties 
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useTeachersQuery({
- *   variables: {
- *   },
- * });
- */
-export function useTeachersQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<TeachersQuery, TeachersQueryVariables>) {
-        return ApolloReactHooks.useQuery<TeachersQuery, TeachersQueryVariables>(TeachersDocument, baseOptions);
-      }
-export function useTeachersLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<TeachersQuery, TeachersQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<TeachersQuery, TeachersQueryVariables>(TeachersDocument, baseOptions);
-        }
-export type TeachersQueryHookResult = ReturnType<typeof useTeachersQuery>;
-export type TeachersLazyQueryHookResult = ReturnType<typeof useTeachersLazyQuery>;
-export type TeachersQueryResult = ApolloReactCommon.QueryResult<TeachersQuery, TeachersQueryVariables>;
+export type EditStudentMutationHookResult = ReturnType<typeof useEditStudentMutation>;
+export type EditStudentMutationResult = ApolloReactCommon.MutationResult<EditStudentMutation>;
+export type EditStudentMutationOptions = ApolloReactCommon.BaseMutationOptions<EditStudentMutation, EditStudentMutationVariables>;
 export const LoginDocument = gql`
     mutation Login($username: String!, $password: String!) {
   login(username: $username, password: $password) {
@@ -814,68 +792,197 @@ export function useMeLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptio
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = ApolloReactCommon.QueryResult<MeQuery, MeQueryVariables>;
-export const UserDocument = gql`
-    query User($id: ID!) {
-  user(id: $id) {
-    ...userFragment
+export const StudentDocument = gql`
+    query Student($id: ID!) {
+  student(id: $id) {
+    ...studentFragment
   }
 }
-    ${UserFragmentFragmentDoc}`;
+    ${StudentFragmentFragmentDoc}`;
 
 /**
- * __useUserQuery__
+ * __useStudentQuery__
  *
- * To run a query within a React component, call `useUserQuery` and pass it any options that fit your needs.
- * When your component renders, `useUserQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * To run a query within a React component, call `useStudentQuery` and pass it any options that fit your needs.
+ * When your component renders, `useStudentQuery` returns an object from Apollo Client that contains loading, error, and data properties 
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useUserQuery({
+ * const { data, loading, error } = useStudentQuery({
  *   variables: {
  *      id: // value for 'id'
  *   },
  * });
  */
-export function useUserQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<UserQuery, UserQueryVariables>) {
-        return ApolloReactHooks.useQuery<UserQuery, UserQueryVariables>(UserDocument, baseOptions);
+export function useStudentQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<StudentQuery, StudentQueryVariables>) {
+        return ApolloReactHooks.useQuery<StudentQuery, StudentQueryVariables>(StudentDocument, baseOptions);
       }
-export function useUserLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<UserQuery, UserQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<UserQuery, UserQueryVariables>(UserDocument, baseOptions);
+export function useStudentLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<StudentQuery, StudentQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<StudentQuery, StudentQueryVariables>(StudentDocument, baseOptions);
         }
-export type UserQueryHookResult = ReturnType<typeof useUserQuery>;
-export type UserLazyQueryHookResult = ReturnType<typeof useUserLazyQuery>;
-export type UserQueryResult = ApolloReactCommon.QueryResult<UserQuery, UserQueryVariables>;
-export const UsersDocument = gql`
-    query Users {
-  users {
-    ...userFragment
+export type StudentQueryHookResult = ReturnType<typeof useStudentQuery>;
+export type StudentLazyQueryHookResult = ReturnType<typeof useStudentLazyQuery>;
+export type StudentQueryResult = ApolloReactCommon.QueryResult<StudentQuery, StudentQueryVariables>;
+export const StudentsDocument = gql`
+    query Students {
+  students {
+    ...studentFragment
   }
 }
-    ${UserFragmentFragmentDoc}`;
+    ${StudentFragmentFragmentDoc}`;
 
 /**
- * __useUsersQuery__
+ * __useStudentsQuery__
  *
- * To run a query within a React component, call `useUsersQuery` and pass it any options that fit your needs.
- * When your component renders, `useUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * To run a query within a React component, call `useStudentsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useStudentsQuery` returns an object from Apollo Client that contains loading, error, and data properties 
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useUsersQuery({
+ * const { data, loading, error } = useStudentsQuery({
  *   variables: {
  *   },
  * });
  */
-export function useUsersQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<UsersQuery, UsersQueryVariables>) {
-        return ApolloReactHooks.useQuery<UsersQuery, UsersQueryVariables>(UsersDocument, baseOptions);
+export function useStudentsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<StudentsQuery, StudentsQueryVariables>) {
+        return ApolloReactHooks.useQuery<StudentsQuery, StudentsQueryVariables>(StudentsDocument, baseOptions);
       }
-export function useUsersLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<UsersQuery, UsersQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<UsersQuery, UsersQueryVariables>(UsersDocument, baseOptions);
+export function useStudentsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<StudentsQuery, StudentsQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<StudentsQuery, StudentsQueryVariables>(StudentsDocument, baseOptions);
         }
-export type UsersQueryHookResult = ReturnType<typeof useUsersQuery>;
-export type UsersLazyQueryHookResult = ReturnType<typeof useUsersLazyQuery>;
-export type UsersQueryResult = ApolloReactCommon.QueryResult<UsersQuery, UsersQueryVariables>;
+export type StudentsQueryHookResult = ReturnType<typeof useStudentsQuery>;
+export type StudentsLazyQueryHookResult = ReturnType<typeof useStudentsLazyQuery>;
+export type StudentsQueryResult = ApolloReactCommon.QueryResult<StudentsQuery, StudentsQueryVariables>;
+export const AddTeacherDocument = gql`
+    mutation AddTeacher($name: String!, $hourPrice: Int!) {
+  addTeacher(name: $name, hourPrice: $hourPrice) {
+    ...teacherFragment
+  }
+}
+    ${TeacherFragmentFragmentDoc}`;
+export type AddTeacherMutationFn = ApolloReactCommon.MutationFunction<AddTeacherMutation, AddTeacherMutationVariables>;
+
+/**
+ * __useAddTeacherMutation__
+ *
+ * To run a mutation, you first call `useAddTeacherMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddTeacherMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addTeacherMutation, { data, loading, error }] = useAddTeacherMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *      hourPrice: // value for 'hourPrice'
+ *   },
+ * });
+ */
+export function useAddTeacherMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<AddTeacherMutation, AddTeacherMutationVariables>) {
+        return ApolloReactHooks.useMutation<AddTeacherMutation, AddTeacherMutationVariables>(AddTeacherDocument, baseOptions);
+      }
+export type AddTeacherMutationHookResult = ReturnType<typeof useAddTeacherMutation>;
+export type AddTeacherMutationResult = ApolloReactCommon.MutationResult<AddTeacherMutation>;
+export type AddTeacherMutationOptions = ApolloReactCommon.BaseMutationOptions<AddTeacherMutation, AddTeacherMutationVariables>;
+export const DeleteTeacherDocument = gql`
+    mutation DeleteTeacher($id: ID!) {
+  deleteTeacher(id: $id)
+}
+    `;
+export type DeleteTeacherMutationFn = ApolloReactCommon.MutationFunction<DeleteTeacherMutation, DeleteTeacherMutationVariables>;
+
+/**
+ * __useDeleteTeacherMutation__
+ *
+ * To run a mutation, you first call `useDeleteTeacherMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteTeacherMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteTeacherMutation, { data, loading, error }] = useDeleteTeacherMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteTeacherMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteTeacherMutation, DeleteTeacherMutationVariables>) {
+        return ApolloReactHooks.useMutation<DeleteTeacherMutation, DeleteTeacherMutationVariables>(DeleteTeacherDocument, baseOptions);
+      }
+export type DeleteTeacherMutationHookResult = ReturnType<typeof useDeleteTeacherMutation>;
+export type DeleteTeacherMutationResult = ApolloReactCommon.MutationResult<DeleteTeacherMutation>;
+export type DeleteTeacherMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteTeacherMutation, DeleteTeacherMutationVariables>;
+export const EditTeacherDocument = gql`
+    mutation EditTeacher($id: ID!, $name: String!, $hourPrice: Int!) {
+  editTeacher(id: $id, name: $name, hourPrice: $hourPrice) {
+    ...teacherFragment
+  }
+}
+    ${TeacherFragmentFragmentDoc}`;
+export type EditTeacherMutationFn = ApolloReactCommon.MutationFunction<EditTeacherMutation, EditTeacherMutationVariables>;
+
+/**
+ * __useEditTeacherMutation__
+ *
+ * To run a mutation, you first call `useEditTeacherMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useEditTeacherMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [editTeacherMutation, { data, loading, error }] = useEditTeacherMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      name: // value for 'name'
+ *      hourPrice: // value for 'hourPrice'
+ *   },
+ * });
+ */
+export function useEditTeacherMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<EditTeacherMutation, EditTeacherMutationVariables>) {
+        return ApolloReactHooks.useMutation<EditTeacherMutation, EditTeacherMutationVariables>(EditTeacherDocument, baseOptions);
+      }
+export type EditTeacherMutationHookResult = ReturnType<typeof useEditTeacherMutation>;
+export type EditTeacherMutationResult = ApolloReactCommon.MutationResult<EditTeacherMutation>;
+export type EditTeacherMutationOptions = ApolloReactCommon.BaseMutationOptions<EditTeacherMutation, EditTeacherMutationVariables>;
+export const TeachersDocument = gql`
+    query Teachers {
+  teachers {
+    ...teacherFragment
+  }
+}
+    ${TeacherFragmentFragmentDoc}`;
+
+/**
+ * __useTeachersQuery__
+ *
+ * To run a query within a React component, call `useTeachersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTeachersQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTeachersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useTeachersQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<TeachersQuery, TeachersQueryVariables>) {
+        return ApolloReactHooks.useQuery<TeachersQuery, TeachersQueryVariables>(TeachersDocument, baseOptions);
+      }
+export function useTeachersLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<TeachersQuery, TeachersQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<TeachersQuery, TeachersQueryVariables>(TeachersDocument, baseOptions);
+        }
+export type TeachersQueryHookResult = ReturnType<typeof useTeachersQuery>;
+export type TeachersLazyQueryHookResult = ReturnType<typeof useTeachersLazyQuery>;
+export type TeachersQueryResult = ApolloReactCommon.QueryResult<TeachersQuery, TeachersQueryVariables>;

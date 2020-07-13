@@ -9,7 +9,6 @@ import {
 // Material icons
 import {
   DateRangeOutlined as DateRangeIcon,
-  EditOutlined as EditIcon,
   PeopleOutlined as PeopleIcon,
 } from '@material-ui/icons';
 // Externals
@@ -140,20 +139,6 @@ const Sidebar: React.FC<Props> = ({ className }) => {
           activeClassName={classes.activeListItem}
           className={classes.listItem}
           component={NavLinkWithRef}
-          to="/admin/visibility"
-        >
-          <ListItemIcon className={classes.listItemIcon}>
-            <EditIcon />
-          </ListItemIcon>
-          <ListItemText
-            classes={{ primary: classes.listItemText }}
-            primary="Manage Visibility"
-          />
-        </ListItem>
-        <ListItem
-          activeClassName={classes.activeListItem}
-          className={classes.listItem}
-          component={NavLinkWithRef}
           to="/admin/teachers"
         >
           <ListItemIcon className={classes.listItemIcon}>
@@ -168,14 +153,14 @@ const Sidebar: React.FC<Props> = ({ className }) => {
           activeClassName={classes.activeListItem}
           className={classes.listItem}
           component={NavLinkWithRef}
-          to="/admin/users"
+          to="/admin/students"
         >
           <ListItemIcon className={classes.listItemIcon}>
             <PeopleIcon />
           </ListItemIcon>
           <ListItemText
             classes={{ primary: classes.listItemText }}
-            primary="Manage Users"
+            primary="Manage Students"
           />
         </ListItem>
         <ListItem

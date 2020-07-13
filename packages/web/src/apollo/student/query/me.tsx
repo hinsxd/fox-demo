@@ -1,9 +1,9 @@
-import gql from 'graphql-tag';
 import { userFragment } from 'apollo/user/fragment/userFragment';
+import gql from 'graphql-tag';
 
-export const USERS_QUERY = gql`
-  query Users {
-    users {
+export const ME_QUERY = gql`
+  query Me {
+    me {
       ...userFragment
     }
   }

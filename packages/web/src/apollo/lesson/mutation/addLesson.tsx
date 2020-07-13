@@ -7,14 +7,12 @@ export const ADD_LESSON_MUTATION = gql`
     $start: DateTime!
     $end: DateTime!
     $repeatWeeks: Int!
-    $status: LessonStatus!
   ) {
     addLesson(
       teacherId: $teacherId
       start: $start
       end: $end
       repeatWeeks: $repeatWeeks
-      status: $status
     )
   }
 `;

@@ -52,7 +52,7 @@ export class LessonResolver {
     @Args() { teacherId, ...details }: AddLessonArgs
   ): Promise<boolean> {
     try {
-      const { repeatWeeks, start, end, comment, status } = details;
+      const { repeatWeeks, start, end, comment } = details;
       await this.lessonRepo
         .createQueryBuilder()
         .insert()

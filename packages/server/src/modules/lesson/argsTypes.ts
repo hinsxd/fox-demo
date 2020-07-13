@@ -1,4 +1,3 @@
-import { LessonStatus } from 'src/entity/Lesson';
 import { ArgsType, Field, ID, Int } from 'type-graphql';
 @ArgsType()
 export class AddToCartArgs {
@@ -28,9 +27,6 @@ export class AddLessonArgs {
   // @Field(type => Boolean)
   // bookable: boolean;
 
-  @Field((type) => LessonStatus, { defaultValue: LessonStatus.Hidden })
-  status: LessonStatus;
-
   // @Field(type => Boolean)
   // visible: boolean;
 
@@ -57,9 +53,6 @@ export class EditLessonArgs {
 
   @Field()
   comment: string;
-
-  @Field((type) => LessonStatus)
-  status: LessonStatus;
 }
 
 @ArgsType()
@@ -118,16 +111,4 @@ export class SwapLessonArgs {
 
   @Field()
   ccLast4: string;
-}
-
-@ArgsType()
-export class SetLessonsStatusArgs {
-  @Field((type) => Date)
-  from: Date;
-
-  @Field((type) => Date)
-  to: Date;
-
-  @Field((type) => LessonStatus)
-  status: LessonStatus;
 }

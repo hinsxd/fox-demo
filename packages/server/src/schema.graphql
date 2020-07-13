@@ -18,25 +18,16 @@ type Lesson {
   student: Student
 }
 
-"""Lesson Status"""
-enum LessonStatus {
-  Hidden
-  DisplayOnly
-  Bookable
-  Booked
-  Cancelled
-}
-
 type Mutation {
-  addLesson(teacherId: ID!, start: DateTime!, end: DateTime!, comment: String = "", status: LessonStatus = Hidden, repeatWeeks: Int!): Boolean!
-  editLesson(id: ID!, studentId: ID, teacherId: ID!, start: DateTime!, end: DateTime!, comment: String!, status: LessonStatus!): Lesson!
+  addLesson(teacherId: ID!, start: DateTime!, end: DateTime!, comment: String = "", repeatWeeks: Int!): Boolean!
+  editLesson(id: ID!, studentId: ID, teacherId: ID!, start: DateTime!, end: DateTime!, comment: String!): Lesson!
   setComment(id: ID!, comment: String!): Lesson!
   deleteLesson(id: ID!, cancelReason: String): String!
   addStudent(name: String!, phone: String = "", emergencyName: String = "", emergencyRelation: String = "", emergencyPhone: String = "", detailedAddress: String = ""): Student!
   editStudent(id: ID!, name: String, phone: String, emergencyName: String, emergencyRelation: String, emergencyPhone: String, detailedAddress: String): Student!
   addTeacher(name: String!, hourPrice: Int!): Teacher!
   deleteTeacher(id: ID!): Boolean!
-  updateTeacher(id: ID!, name: String!, hourPrice: Int!, color: String!): Teacher!
+  editTeacher(id: ID!, name: String!, hourPrice: Int!): Teacher!
   logout: Boolean!
   login(username: String!, password: String!): User!
 }
@@ -67,7 +58,6 @@ type Teacher {
   name: String!
   lessons: [Lesson!]
   hourPrice: Float!
-  color: String!
 }
 
 type User {

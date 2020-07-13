@@ -1,20 +1,8 @@
-import { Field, Float, ID, ObjectType, registerEnumType } from 'type-graphql';
+import { Field, Float, ID, ObjectType } from 'type-graphql';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Student } from './Student';
 import { Teacher } from './Teacher';
 
-export enum LessonStatus {
-  Hidden,
-  DisplayOnly,
-  Bookable,
-  Booked,
-  Cancelled,
-}
-
-registerEnumType(LessonStatus, {
-  name: 'LessonStatus', // this one is mandatory
-  description: 'Lesson Status', // this one is optional
-});
 @ObjectType()
 @Entity({
   orderBy: { start: 'ASC' },

@@ -1,34 +1,30 @@
 import {
-  makeStyles,
-  Dialog,
-  DialogTitle,
-  DialogContent,
+  Box,
   Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  makeStyles,
   TextField,
   Typography,
-  IconButton,
-  Box
 } from '@material-ui/core';
-import { Remove, Add } from '@material-ui/icons';
-import React, { useState, useEffect, useContext } from 'react';
-import {
-  useTeachersQuery,
-  useAddLessonMutation,
-  LessonStatus
-} from 'types/graphql';
+import { Add, Remove } from '@material-ui/icons';
 import { KeyboardDateTimePicker } from '@material-ui/pickers';
-import { addWeeks, format } from 'date-fns';
-import { DialogContext } from './Overview';
 import clsx from 'clsx';
+import { addWeeks, format } from 'date-fns';
+import React, { useContext, useEffect, useState } from 'react';
+import { useAddLessonMutation, useTeachersQuery } from 'types/graphql';
+import { DialogContext } from './Overview';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   input: {
     marginBottom: theme.spacing(1.5),
-    minWidth: 120
+    minWidth: 120,
   },
   inputRowElement: {
-    flex: 1
-  }
+    flex: 1,
+  },
 }));
 type FormState = {
   teacherId: string;
@@ -36,7 +32,6 @@ type FormState = {
   end: Date | null;
   repeatWeeks: number;
   comment: string;
-  status: LessonStatus;
 };
 
 const initialFormState: FormState = {
@@ -45,7 +40,6 @@ const initialFormState: FormState = {
   end: null,
   repeatWeeks: 1,
   comment: '',
-  status: LessonStatus.Hidden
 };
 
 const AddLessonDialog: React.FC<{
@@ -56,7 +50,7 @@ const AddLessonDialog: React.FC<{
   const [formState, setFormState] = useState<FormState>(initialFormState);
 
   useEffect(() => {
-    setFormState(state => ({ ...state, start, end }));
+    setFormState((state) => ({ ...state, start, end }));
   }, [start, end]);
 
   const { data: teachersData } = useTeachersQuery();
@@ -65,9 +59,9 @@ const AddLessonDialog: React.FC<{
 
   useEffect(() => {
     if (teachers.length > 0)
-      setFormState(state => ({
+      setFormState((state) => ({
         ...state,
-        teacherId: teachers[0].id
+        teacherId: teachers[0].id,
       }));
   }, [teachers]);
 
@@ -81,18 +75,18 @@ const AddLessonDialog: React.FC<{
       onClose();
       setFormState({
         ...initialFormState,
-        ...(teachers.length > 0 && { teacherId: teachers[0].id })
+        ...(teachers.length > 0 && { teacherId: teachers[0].id }),
       });
     }
   };
 
   const addRepeatWeeks = () => {
-    setFormState(state => ({ ...state, repeatWeeks: state.repeatWeeks + 1 }));
+    setFormState((state) => ({ ...state, repeatWeeks: state.repeatWeeks + 1 }));
   };
   const minusRepeatWeeks = () => {
-    setFormState(state => ({
+    setFormState((state) => ({
       ...state,
-      repeatWeeks: Math.max(state.repeatWeeks - 1, 1)
+      repeatWeeks: Math.max(state.repeatWeeks - 1, 1),
     }));
   };
   const until = formState.start
@@ -109,18 +103,18 @@ const AddLessonDialog: React.FC<{
           fullWidth
           label="Teacher"
           value={formState.teacherId}
-          onChange={e =>
-            setFormState(state => ({
+          onChange={(e) =>
+            setFormState((state) => ({
               ...state,
-              teacherId: e.target.value
+              teacherId: e.target.value,
             }))
           }
           SelectProps={{
-            native: true
+            native: true,
           }}
         >
           <option value=""></option>
-          {teachers.map(teacher => (
+          {teachers.map((teacher) => (
             <option key={teacher.id} value={teacher.id}>
               {teacher.name}
             </option>
@@ -134,11 +128,11 @@ const AddLessonDialog: React.FC<{
             autoOk={true}
             openTo="hours"
             format="dd/MM/yyyy HH:mm"
-            onChange={date => {
+            onChange={(date) => {
               if (date) {
-                setFormState(state => ({
+                setFormState((state) => ({
                   ...state,
-                  start: date
+                  start: date,
                 }));
               }
             }}
@@ -152,11 +146,11 @@ const AddLessonDialog: React.FC<{
             autoOk={true}
             openTo="hours"
             format="dd/MM/yyyy HH:mm"
-            onChange={date => {
+            onChange={(date) => {
               if (date)
-                setFormState(state => ({
+                setFormState((state) => ({
                   ...state,
-                  end: date
+                  end: date,
                 }));
             }}
             ampm={false}
@@ -190,49 +184,14 @@ const AddLessonDialog: React.FC<{
           label="Comments"
           placeholder="Add comments"
           value={formState.comment}
-          onChange={e => {
+          onChange={(e) => {
             setFormState({
               ...formState,
-              comment: e.target.value
+              comment: e.target.value,
             });
           }}
           fullWidth
         />
-        <TextField
-          className={classes.input}
-          id="status"
-          select
-          label="Lesson Status"
-          value={formState.status}
-          onChange={e =>
-            setFormState(state => ({
-              ...state,
-              status: e.target.value as LessonStatus
-            }))
-          }
-          SelectProps={{
-            native: true,
-            MenuProps: {
-              // className: classes.menu,
-            }
-          }}
-          margin="normal"
-          fullWidth
-        >
-          <option value=""></option>
-          {Object.keys(LessonStatus).map(status => (
-            <option
-              key={status}
-              value={status}
-              disabled={
-                status === LessonStatus.Booked ||
-                status === LessonStatus.Cancelled
-              }
-            >
-              {status}
-            </option>
-          ))}
-        </TextField>
 
         <Button
           type="submit"
