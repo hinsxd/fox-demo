@@ -139,7 +139,7 @@ async function bootstrap() {
   app.use(
     cors({
       credentials: true,
-      origin: '*',
+      origin: FRONTEND_URL,
     })
   );
 
