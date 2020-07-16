@@ -270,15 +270,15 @@ async function bootstrap() {
       .createServer(
         {
           key: fs.readFileSync(
-            '/etc/letsencrypt/live/fox-demo-api.hinsxd.dev/privkey.pem',
+            '/etc/letsencrypt/live/fox-api.hinsxd.dev/privkey.pem',
             'utf8'
           ),
           cert: fs.readFileSync(
-            '/etc/letsencrypt/live/fox-demo-api.hinsxd.dev/cert.pem',
+            '/etc/letsencrypt/live/fox-api.hinsxd.dev/cert.pem',
             'utf8'
           ),
           ca: fs.readFileSync(
-            '/etc/letsencrypt/live/fox-demo-api.hinsxd.dev/chain.pem',
+            '/etc/letsencrypt/live/fox-api.hinsxd.dev/chain.pem',
             'utf8'
           ),
         },
